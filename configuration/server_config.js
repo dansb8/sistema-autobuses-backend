@@ -10,6 +10,7 @@ app.set('port', 8000);
 
 //Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 var corsOptions = {
     origin: 'http://localhost:4200',

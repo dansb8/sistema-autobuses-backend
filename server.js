@@ -1,8 +1,10 @@
 const app = require('./configuration/server_config');
 
-//require('./routes/user')(app);
+require('./routes/user')(app);
 require('./routes/state')(app);
 require('./routes/login')(app);
+require('./routes/terminals')(app);
+require('./routes/cards')(app);
 
 app.listen(app.get('port'), () => {
     console.log('Server started in port', app.get('port'));

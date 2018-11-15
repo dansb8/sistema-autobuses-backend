@@ -1,6 +1,7 @@
 const app = require('./configuration/server_config');
 
 require('./routes/user')(app);
+require('./routes/admin')(app);
 require('./routes/state')(app);
 require('./routes/login')(app);
 require('./routes/terminals')(app);

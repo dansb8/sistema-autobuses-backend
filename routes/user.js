@@ -9,7 +9,7 @@ module.exports = app => {
         const correo = req.headers['email'];
         const contraseña = req.headers['password'];
         const rfc = req.headers['rfc'];
-        db_connection.query(`SELECT id FROM usuario WHERE correo='${correo}'`, (err, result) => {
+        db_connection.query(`SELECT id FROM usuario WHERE correo='${correo}' and activo=1`, (err, result) => {
             if (err) throw err;
             if (result.length === 1) {
                 res.send(false);
@@ -23,7 +23,20 @@ module.exports = app => {
         });
     });
 
-    app.route('/api/cats/:id').get((req, res) => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*app.route('/api/cats/:id').get((req, res) => {
         const requestedCatName = req.params['id'];
         db_connection.query(`SELECT nombre,tipo FROM usuario WHERE id=${requestedCatName}`, (err, result) => {
             //console.log(result[0].nombre);
@@ -41,5 +54,5 @@ module.exports = app => {
             //Tratamiento de errores
         //});
         res.status(201).send({ name: usuario });
-    });
+    });*/
 }

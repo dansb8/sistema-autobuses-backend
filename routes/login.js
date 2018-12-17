@@ -3,6 +3,7 @@ module.exports = app => {
     app.route('/api/login/').post((req, res) => {
         const email = req.headers['email'];
         const password = req.headers['password'];
+        //db_connection.query(`call login('${email}',sha1('${password}')`, (err, result) => {
         db_connection.query(`SELECT id, nombre, tipo FROM usuario WHERE correo='${email}' and contrasena=sha1('${password}') and activo=1`, (err, result) => {
             if (err) throw err;
             if (result.length === 1) {

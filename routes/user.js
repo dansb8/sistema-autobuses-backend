@@ -15,8 +15,9 @@ module.exports = app => {
                 res.send(false);
             }
             else {
-                db_connection.query(`INSERT INTO usuario (nombre,ap_pat,ap_mat,rfc,tipo,correo,telefono,num_viajes,contrasena,activo) 
-                            VALUES ('${nombre}','${ap_pat}','${ap_mat}','${rfc}',0,'${correo}','${telefono}',0,sha1('${contraseña}'),1)`, (err, result) => {
+                db_connection.query(`call register('${nombre}','${ap_pat}','${ap_mat}','${rfc}','${correo}','${telefono}',sha1('${contraseña}'))`, (err, result) => {
+                //db_connection.query(`INSERT INTO usuario (nombre,ap_pat,ap_mat,rfc,tipo,correo,telefono,num_viajes,contrasena,activo)
+                //           VALUES ('${nombre}','${ap_pat}','${ap_mat}','${rfc}',0,'${correo}','${telefono}',0,sha1('${contraseña}'),1)`, (err, result) => {
                     res.send(true);
                 });
             }

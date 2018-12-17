@@ -58,7 +58,7 @@ module.exports = app => {
     app.route('/api/admin/checkpass/').post((req, res) => {
         const id = req.headers['id'];
         const contrasena = req.headers['password'];
-        db_connection.query(`SELECT id FROM usuario WHERE id='${id}' and contrasena=sha1('${contrasena}')`, (err, result) => {
+        db_connection.query(`SELECT id FROM usuario WHERE id=${id} and contrasena=sha1('${contrasena}')`, (err, result) => {
             if (err) throw err;
             if (result.length === 1) {
                 console.log(id+' '+contrasena+' true');
@@ -67,6 +67,33 @@ module.exports = app => {
             else {
                 console.log(id+' '+contrasena+' false');
                 res.send(false);
+            }
+        });
+    });
+    app.route('/api/admin/getbuses/').post((req, res) => {
+        db_connection.query(`SELECT id, modelo as model, capacidad as capacity, placa as plate, IF(tipo=0,"Austero","De lujo") as type FROM camion WHERE activo=1`, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+    app.route('/api/admin/updatebus/').post((req, res) => {
+        const id = req.headers['id'];
+        const modelo = req.headers['model'];
+        const capacidad = req.headers['capacity'];
+        const placa = req.headers['plate'];
+        var tipo = (req.headers['type']=='De lujo')?1:0;
+        console.log(id);
+        console.log(modelo);
+        console.log(capacidad);
+        console.log(placa);
+        console.log(tipo);
+        db_connection.query(`UPDATE camion SET modelo='${modelo}', capacidad=${capacidad}, placa='${placa}', tipo=${tipo} WHERE id=${id}`, (err, result) => {
+            if (err) throw err;
+            if(req.headers['type']!="De lujo" && req.headers['type']!="Austero"){
+                res.send(false);
+            }
+            else{
+                res.send(true);
             }
         });
     });

@@ -9,6 +9,7 @@ require('./routes/cards')(app);
 require('./routes/reports')(app);
 require('./routes/ticket')(app);
 require('./routes/phone')(app);
+require('./routes/bill')(app);
 
 app.listen(app.get('port'), () => {
     console.log('Server started in port', app.get('port'));

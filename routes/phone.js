@@ -20,7 +20,7 @@ module.exports = app => {
                     function (error, stdout, stderr) {
                         console.log(stdout);
                         if (error !== null) {
-                            console.log('exec error: ' + error);
+                          res.send(aux2.result);  console.log('exec error: ' + error);
                         }
                     });*/
                 res.send(true);

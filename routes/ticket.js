@@ -5,14 +5,26 @@ module.exports = app => {
         const seat = req.headers['seat'];
         const cost = req.headers['cost'];
         const date = req.headers['fecha'];
-        const iva_compra = req.headers['iva'];
+        const iva_compra = req.headers['iva']*100;
         const id_ruta_horario_compra = req.headers['id_route'];
         const id_usuario_compra = req.headers['id_user'];
         const id_tarjeta_compra = req.headers['id_card'];
         const nombre = req.headers['name'];
         const ap_pat = req.headers['apepat'];
         const ap_mat = req.headers['apemat'];
-        const tipo = req.headers['type'];
+        const tipo = (req.headers['type']=='estudiante'?1:0);
+        const id_factura = req.headers['numbill'];
+        console.log(iva_compra);
+        console.log(tipo);
+        console.log(req.headers['type']);
+        console.log("Paso por aqui");
+        console.log(id_factura);
+        db_connection.query(`call addTicket(${seat},${cost},'${date}',${iva_compra},${id_ruta_horario_compra},${id_usuario_compra},${id_factura},${id_tarjeta_compra},'${nombre}','${ap_pat}','${ap_mat}',${tipo})`, (err, result) => {
+        //db_connection.query(`call addTicket(${seat},${cost},'${date}')`, (err, result) => {
+            console.log(result);
+            res.send(result);
+        });
+        /*
         db_connection.query(`select num_viajes from usuario where id=${ id_usuario_compra }`, (err, result) => {
             if (err) throw err;
             if (result.length === 0) {
@@ -54,6 +66,6 @@ module.exports = app => {
                     }
                 });
             }
-        });
+        });*/
     });
 }

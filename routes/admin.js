@@ -97,4 +97,23 @@ module.exports = app => {
             }
         });
     });
+
+    app.route('/api/admin/deletebus/').post((req, res) => {
+        const id = req.headers['id'];
+        db_connection.query(`UPDATE camion SET activo=0 WHERE id=${ id }`, (err, result) => {
+            if (err) throw err;
+            res.send( true );
+        });
+    });
+
+    app.route('/api/admin/addbus/').post((req, res) => {
+        const modelo = req.headers['model'];
+        const capacidad = req.headers['capacity'];
+        const placa = req.headers['plate'];
+        var tipo = (req.headers['type']=='De lujo')?1:0;
+        db_connection.query(`INSERT INTO camion (id,modelo,capacidad,placa,tipo,activo) VALUES (id,'${modelo}',${capacidad},'${placa}',${tipo},1)`, (err, result) => {
+            if (err) throw err;
+            res.send(true);
+        });
+    });
 }

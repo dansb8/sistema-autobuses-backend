@@ -26,6 +26,29 @@ module.exports = app => {
             res.send(result);
         });
     });
+    app.route('/api/terminal/showterminals/').post((req, res) => {
+        db_connection.query(`SELECT a.id as id, b.nombre as city, a.nombre as name, a.colonia as col, a.calle as street, a.num_ext as num, a.telefono as tel, a.codigo_postal as zip, c.clave as state 
+                            FROM terminal a JOIN ciudad b JOIN estado c
+                            ON a.id_ciudad=b.id and b.id_estado=c.id and a.activo=1 
+                            ORDER BY id`, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
+    app.route('/api/terminal/addterminal/').post((req, res) => {
+        const id_ciudad = req.headers['city'];
+        const nombre = req.headers['name'];
+        const colonia = req.headers['col'];
+        const calle = req.headers['street'];
+        const num_ext = req.headers['num'];
+        const telefono = req.headers['tel'];
+        const codigo_postal = req.headers['zip'];
+        db_connection.query(`INSERT INTO terminal (id,id_ciudad,nombre,colonia,calle,num_ext,telefono,codigo_postal,activo) 
+                            VALUES (id,${id_ciudad},'${nombre}','${colonia}','${calle}','${num_ext}','${telefono}','${codigo_postal}',1)`, (err, result) => {
+            if (err) throw err;
+            res.send(result);
+        });
+    });
     app.route('/api/terminal/directory/').post((req, res) => {
         const pag = req.headers['pag'];
         const start = 6*(pag-1);

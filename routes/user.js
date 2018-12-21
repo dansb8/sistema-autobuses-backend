@@ -9,21 +9,28 @@ module.exports = app => {
         const correo = req.headers['email'];
         const contraseña = req.headers['password'];
         const rfc = req.headers['rfc'];
-        db_connection.query(`SELECT id FROM usuario WHERE correo='${correo}' and activo=1`, (err, result) => {
-            if (err) throw err;
-            if (result.length === 1) {
-                res.send(false);
+        console.log(nombre);
+        console.log(ap_pat);
+        console.log(ap_mat);
+        console.log(telefono);
+        console.log(correo);
+        console.log(contraseña);
+        console.log(rfc);
+
+
+
+        db_connection.query(`call register('${nombre}','${ap_pat}','${ap_mat}','${rfc}','${correo}','${telefono}',sha1('${contraseña}'))`, (err, result) => {
+            var aux = result[0];
+            var aux2 = aux[0];
+            console.log(aux2.result);
+            if(aux2.result==1){
+                res.send(true);
             }
-            else {
-                db_connection.query(`call register('${nombre}','${ap_pat}','${ap_mat}','${rfc}','${correo}','${telefono}',sha1('${contraseña}'))`, (err, result) => {
-                //db_connection.query(`INSERT INTO usuario (nombre,ap_pat,ap_mat,rfc,tipo,correo,telefono,num_viajes,contrasena,activo)
-                //           VALUES ('${nombre}','${ap_pat}','${ap_mat}','${rfc}',0,'${correo}','${telefono}',0,sha1('${contraseña}'),1)`, (err, result) => {
-                    res.send(true);
-                });
+            else{
+                res.send(false);
             }
         });
     });
-
 
 
 

@@ -9,41 +9,21 @@ module.exports = app => {
         const titular = req.headers['name'];
         const mes = req.headers['expmonth'];
         const anio = req.headers['expyear'];
-        console.log(anio);
+        console.log(titular);
         const cvc = req.headers['cvc'];
-        db_connection.query(`SELECT count(id) as total FROM tarjeta WHERE numero='${numero}' and id_usuario=${id}`, (err, result) => {
-            if (result[0].total == 1) {
-                db_connection.query(`SELECT count(id) as total FROM tarjeta WHERE numero='${numero}' and id_usuario=${id} and activo=1`, (err2, result2) => {
-                    if (result2[0].total == 1) {
-                        res.send({
-                            result: false,
-                            message: "No puedes registrar tarjetas que ya tienes registradas."
-                        });
-                    }
-                    else{
-                        db_connection.query(`UPDATE tarjeta SET 
-                                            activo=1,tipo=${tipo},compania='${compania}',titular='${titular}',mes_vencimiento='${mes}',anio_vencimiento='${anio}',cvc='${cvc}' 
-                                            WHERE numero='${numero}' and id_usuario=${id}`, (err3, result3) => {
-                            res.send({
-                                result: true,
-                                message: "Tu tarjeta ha quedado activada nuevamente."
-                            });
-                        });
-                    }
-                });
+        db_connection.query(`call addCard(${id},${tipo},'${compania}','${numero}','${titular}','${mes}','${anio}','${cvc}')`, (err, result) => {
+            var aux = result[0];
+            var aux2 = aux[0];
+            console.log(aux2.result);
+            if(aux2.result==1){
+                res.send(true);
             }
             else{
-                db_connection.query(`INSERT INTO tarjeta (id,tipo,compania,numero,id_usuario,activo,titular,mes_vencimiento,anio_vencimiento,cvc)
-                            VALUES (id,${tipo},'${compania}','${numero}',${id},1,'${titular}','${mes}','${anio}','${cvc}')`, (err, result) => {
-                    if (err) throw err;
-                    res.send({
-                        result: true,
-                        message: "Tu tarjeta ha sido añadida."
-                    });
-                });
+                res.send(false);
             }
         });
     });
+
     app.route('/api/cards/request').post((req, res) => {
         const id = req.headers['id'];
         db_connection.query(`SELECT id, IF(tipo=0,'Tarjeta de Débito','Tarjeta de Crédito') as type, compania as company, concat('XXXX-XXXX-XXXX-',substring(numero,16)) as number, titular as owner, concat(mes_vencimiento,'/',substring(anio_vencimiento,3)) as date FROM v_tarjeta WHERE id_usuario=${ id }`, (err, result) => {
